@@ -1,7 +1,8 @@
-var header = ['Date', 'Basecamp Scope', 'Open Basecamp+ Issues', 'Track'];
+var header = ['Date', 'Total Scope', 'Open Basecamp+', 'Track'];
 var actualStartDate = "2012-07-14";
 var actualEndDate = "2012-08-31";
 var startDate = "2012-07-15";
+var products = {"Core": "Platform", "gaia": "Gaia", "Marketplace": "Marketplace", "Boot2Gecko": "Boot2Gecko", "Other": "Other"}; 
 var today = new Date(Date.now());
 var issueDate = {}; 
 var productIssueDate = {};
@@ -27,7 +28,7 @@ function createBurndownChart(){
 function drawBurndownChart() {
 	if(dataIsInForAllDates()){
 		var data = [];
-		data[0] = ['Date', 'Total Scope', 'Open basecamp+', 'Track'];
+		data[0] = header;
 		
 		var date = new Date(startDate);
 		var endDate = new Date(actualEndDate);
@@ -74,7 +75,7 @@ function drawBurndownChart() {
 
 function drawProductBurndownCharts(){
 	var productChartDiv = document.getElementById("product_charting_div");
-	for(var product in productIssueDate){
+	for(var product in products){
 		var div = document.createElement('div');
 		div.setAttribute("class", "productBurndownChart");
 		productChartDiv.appendChild(div);
@@ -115,7 +116,7 @@ function drawProductBurndownCharts(){
         //chartData.addRow(["2012-08-31", null, null, 0]);
         
         var options = {
-          title: product + ' Burndown', 
+          title: products[product] + ' Burndown', 
           interpolateNulls: true,
           legend: {position: 'none'},
           hAxis: {textPosition: 'none'},
@@ -194,8 +195,8 @@ function parseDataForDate(date, data){
 			}
 			product = lineData[6+j];
 		}
-		if(product === undefined){
-			alert("\"" + lineData + "\"");
+		if(products[product] === undefined){
+			product = "Other";
 		}
 		if(product.indexOf('"') > -1){
 			product = lineData[7];
