@@ -1,10 +1,15 @@
 .mainChart {
 	width: 900px; 
 	height: 500px;
+	float: left;
 }
 
 .productBurndownChart {
 	width: 300px; 
 	height: 210px;
 	display: inline-block;
+}
+
+#rate_div {
+	height: 500px;
 }
