@@ -45,7 +45,11 @@ function drawBurndownChart() {
         //chartData.addRow(["2012-08-31", null, null, 0]);
         
         var options = {
-          title: 'Basecamp Burndown', interpolateNulls: true
+          title: 'Basecamp Burndown', 
+          interpolateNulls: true,
+          height: 398,
+          width: 608,
+          chartArea: {left:70,top:40,width:"85%",height:"70%"}
         };
 
         var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
@@ -92,6 +96,8 @@ function drawProductBurndownCharts(){
         var options = {
           title: products[product] + ' Burndown', 
           interpolateNulls: true,
+          height:208,
+          width:298,
           legend: {position: 'none'},
           hAxis: {textPosition: 'none'},
           chartArea: {left:30,top:20,width:"95%",height:"85%"}
