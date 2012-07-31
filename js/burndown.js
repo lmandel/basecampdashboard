@@ -9,6 +9,7 @@ var productIssueDate = {};
 
 function createBurndownChart(){
 	var date = new Date(startDate);
+	date.setHours(0, 0, 0, 0);
 	while (date.getTime() < today.getTime()){
 		var dateString = getDateString(date);
 		getDataForDate(dateString);
@@ -49,7 +50,8 @@ function drawBurndownChart() {
           interpolateNulls: true,
           height: 398,
           width: 608,
-          chartArea: {left:70,top:40,width:"85%",height:"70%"}
+          chartArea: {left:70,top:40,width:"85%",height:"70%"},
+          legend: {position: 'in'}
         };
 
         var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
@@ -111,6 +113,7 @@ function drawProductBurndownCharts(){
 
 function dataIsInForAllDates(){
 	var date = new Date(startDate);
+	date.setHours(0, 0, 0, 0);
 	while(date.getTime() < today.getTime()){
 		var dateString = getDateString(date);
 		if(issueDate[dateString] === undefined){
