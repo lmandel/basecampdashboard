@@ -1,4 +1,4 @@
-var header = ['Date', 'Total Scope', 'Open Basecamp+', 'Track'];
+var header = ['Date', 'Total Scope', 'Open', 'Track'];
 var actualStartDate = "2012-07-14";
 var actualEndDate = "2012-08-31";
 var startDate = "2012-07-15";
@@ -53,8 +53,10 @@ function drawBurndownChart() {
           chartArea: {left:70,top:40,width:"85%",height:"70%"},
           legend: {position: 'in'}
         };
+        
+        var chartDiv = document.getElementById('chart_div');
 
-        var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+        var chart = new google.visualization.LineChart(chartDiv);
         chart.draw(chartData, options);
         
         drawProductBurndownCharts();
@@ -70,7 +72,7 @@ function drawProductBurndownCharts(){
 		productChartDiv.appendChild(div);
 	
 		var data = [];
-		data[0] = ['Date', 'Total Scope', 'Open basecamp+', 'Track'];
+		data[0] = header;
 		
 		var date = new Date(startDate);
 		var endDate = new Date(actualEndDate);
@@ -142,49 +144,34 @@ function getDataForDate(date){
 }
 
 function parseDataForDate(date, data){
-	var lines = data.split(/\r\n|\n/);
-
+	var csvData = parseCSVData(data);
+	//var lines = data.split(/\r\n|\n/);
+	
 	var issueCount = 0;
 	var openIssueCount = 0;
 	var productIssueCount = {};
 	var productOpenIssueCount = {};
 	
-	for(var i = 1; typeof lines[i] !== undefined && lines[i] != ""; i++){
-		var lineData = lines[i].split(',');
-		var product;
-		if(lineData[5].charAt(0) != "\""){
-			product = lineData[6];
-		}
-		else{
-			//alert("in else " + lineData[5]);
-			var j = 0;
-			while(lineData[5+j].charAt(lineData[5+j].length-1) != "\""){
-				j++;
-				if(j == 20){
-					alert("breaking");
-					break;
-				}
-			}
-			product = lineData[6+j];
-		}
+	for(var i = 1; i < csvData.length; i++){
+		var product = csvData[i][6];
 		if(products[product] === undefined){
 			product = "Other";
 		}
-		if(product.indexOf('"') > -1){
-			product = lineData[7];
+		
+		issueCount++;
+		if(productIssueCount[product] === undefined){
+			productIssueCount[product] = 0;
 		}
-		if(lineData[4] == "open"){
+		productIssueCount[product]++;
+		
+		if(csvData[i][4] == "open"){
 			openIssueCount++;
 			if(productOpenIssueCount[product] === undefined){
 				productOpenIssueCount[product] = 0;
 			}
 			productOpenIssueCount[product]++;
 		}
-		issueCount++;
-		if(productIssueCount[product] === undefined){
-			productIssueCount[product] = 0;
-		}
-		productIssueCount[product]++;
+		
 	}
 	issueDate[date] = [date, issueCount, openIssueCount, null];
 	if(date == actualStartDate){
