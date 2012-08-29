@@ -8,6 +8,11 @@ var issueDate = {};
 var productIssueDate = {};
 
 function createBurndownChart(){
+	$(document).on("dataupdate", dataIsInForAllDates);
+	$(document).on("alldatain", drawBurndownChart);
+	$(document).on("alldatain", drawProductBurndownCharts);
+	$(document).on("alldatain", calculateFindFixRates);
+	
 	var date = new Date(startDate);
 	date.setHours(0, 0, 0, 0);
 	while (date.getTime() < today.getTime()){
@@ -18,50 +23,45 @@ function createBurndownChart(){
 }
 
 function drawBurndownChart() {
-	if(dataIsInForAllDates()){
-		var data = [];
-		data[0] = header;
+	var data = [];
+	data[0] = header;
 		
-		var date = new Date(startDate);
-		var endDate = new Date(actualEndDate);
-		endDate.setDate(endDate.getDate()+2);
-		var i = 1;
-		while(date.getTime() < endDate.getTime()){
-			var dateString = getDateString(date);
-			
-			if(issueDate[dateString] === undefined){
-				data[i] = [dateString, null, null, null];
-				if(dateString == actualEndDate){
-					data[i] = [actualEndDate, null, null, 0];
-				}
+	var date = new Date(startDate);
+	var endDate = new Date(actualEndDate);
+	endDate.setDate(endDate.getDate()+2);
+	var i = 1;
+	while(date.getTime() < endDate.getTime()){
+		var dateString = getDateString(date);
+		
+		if(issueDate[dateString] === undefined){
+			data[i] = [dateString, null, null, null];
+			if(dateString == actualEndDate){
+				data[i] = [actualEndDate, null, null, 0];
 			}
-			else{
-				data[i] = issueDate[dateString];
-				
-			}
-			date.setDate(date.getDate()+1);
-			i++;
 		}
-        var chartData = google.visualization.arrayToDataTable(data);
-        //chartData.addRow(["2012-08-31", null, null, 0]);
-        
-        var options = {
-          title: 'Basecamp Burndown', 
-          interpolateNulls: true,
-          height: 398,
-          width: 608,
-          chartArea: {left:70,top:40,width:"85%",height:"70%"},
-          legend: {position: 'in'}
-        };
-        
-        var chartDiv = document.getElementById('chart_div');
-
-        var chart = new google.visualization.LineChart(chartDiv);
-        chart.draw(chartData, options);
-        
-        drawProductBurndownCharts();
-        calculateFindFixRates();
+		else{
+			data[i] = issueDate[dateString];
+			
+		}
+		date.setDate(date.getDate()+1);
+		i++;
 	}
+    var chartData = google.visualization.arrayToDataTable(data);
+    //chartData.addRow(["2012-08-31", null, null, 0]);
+        
+    var options = {
+      title: 'Basecamp Burndown', 
+      interpolateNulls: true,
+      height: 398,
+      width: 608,
+      chartArea: {left:70,top:40,width:"85%",height:"70%"},
+      legend: {position: 'in'}
+    };
+        
+    var chartDiv = document.getElementById('chart_div');
+
+    var chart = new google.visualization.LineChart(chartDiv);
+    chart.draw(chartData, options);
 }
 
 function drawProductBurndownCharts(){
@@ -123,7 +123,7 @@ function dataIsInForAllDates(){
 		}
 		date.setDate(date.getDate()+1);
 	}
-	return true;
+	$(document).trigger("alldatain");
 }
 
 function getDataForDate(date){
@@ -188,13 +188,12 @@ function parseDataForDate(date, data){
 		}
 	}
 	
-	
-	drawBurndownChart();
+	$(document).trigger("dataupdate");
 }
 
 function setEmptyDataForDate(date){
 	issueDate[date] = [date,null,null,null];
-	drawBurndownChart();
+	$(document).trigger("dataupdate");
 }
 
 function calculateFindFixRates(){
