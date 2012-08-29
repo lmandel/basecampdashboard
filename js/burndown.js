@@ -1,15 +1,9 @@
 var header = ['Date', 'Total Scope', 'Open', 'Track'];
-var actualStartDate = "2012-07-14";
-var actualEndDate = "2012-08-31";
-var products = {"Core": "Platform", "gaia": "Gaia", "Marketplace": "Marketplace", "Boot2Gecko": "Boot2Gecko", "Other": "Other"}; 
-var today = new Date(Date.now());
-var issueDate = {}; 
-var productIssueDate = {};
 
 function createBurndownChart(){
-	$(document).on("alldatain", drawBurndownChart);
-	$(document).on("alldatain", drawProductBurndownCharts);
-	$(document).on("alldatain", calculateFindFixRates);
+	$(document).on("datarollupcomplete", drawBurndownChart);
+	$(document).on("datarollupcomplete", drawProductBurndownCharts);
+	$(document).on("datarollupcomplete", calculateFindFixRates);
 }
 
 function drawBurndownChart() {

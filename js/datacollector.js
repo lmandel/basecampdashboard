@@ -1,6 +1,11 @@
+var products = {"Core": "Platform", "gaia": "Gaia", "Marketplace": "Marketplace", "Boot2Gecko": "Boot2Gecko", "Other": "Other"}; 
+var issueDate = {}; 
+var productIssueDate = {};
+var bugData = {};
+
 $(document).ready(function () {
 	$(document).on("dataupdate", dataIsInForAllDates);
-	
+	$(document).on("alldatain", rollupData);
 	getData();
 });
 
@@ -9,7 +14,7 @@ function dataIsInForAllDates(){
 	date.setHours(0, 0, 0, 0);
 	while(date.getTime() < today.getTime()){
 		var dateString = getDateAsString(date);
-		if(issueDate[dateString] === undefined){
+		if(bugData[dateString] === undefined){
 			return false;
 		}
 		date.setDate(date.getDate()+1);
@@ -58,52 +63,67 @@ function getDataForDate(date){
 
 function parseDataForDate(date, data){
 	var csvData = parseCSVData(data);
-	
-	var issueCount = 0;
-	var openIssueCount = 0;
-	var productIssueCount = {};
-	var productOpenIssueCount = {};
-	
-	for(var i = 1; i < csvData.length; i++){
-		var product = csvData[i][6];
-		if(products[product] === undefined){
-			product = "Other";
-		}
-		
-		issueCount++;
-		if(productIssueCount[product] === undefined){
-			productIssueCount[product] = 0;
-		}
-		productIssueCount[product]++;
-		
-		if(csvData[i][4] == "open"){
-			openIssueCount++;
-			if(productOpenIssueCount[product] === undefined){
-				productOpenIssueCount[product] = 0;
-			}
-			productOpenIssueCount[product]++;
-		}
-		
-	}
-	issueDate[date] = [date, issueCount, openIssueCount, null];
-	if(date == actualStartDate){
-		issueDate[date][3] = openIssueCount;
-	}
-	for(var product in productIssueCount){
-		if(productIssueDate[product] === undefined){
-			productIssueDate[product] = {};
-		}
-		productIssueDate[product][date] = [date, productIssueCount[product], productOpenIssueCount[product], null];
-		
-		if(date == actualStartDate){
-			productIssueDate[product][date][3] = productOpenIssueCount[product];
-		}
-	}
+	bugData[date] = csvData;
 	
 	$(document).trigger("dataupdate");
 }
 
 function setEmptyDataForDate(date){
-	issueDate[date] = [date,null,null,null];
+	bugData[date] = [];
 	$(document).trigger("dataupdate");
+}
+
+function rollupData(){
+	var date = new Date(startDate);
+	date.setHours(0, 0, 0, 0);
+	while (date.getTime() < today.getTime()){
+		var dateString = getDateAsString(date);
+		
+		var issueCount = 0;
+		var openIssueCount = 0;
+		var productIssueCount = {};
+		var productOpenIssueCount = {};
+		if(bugData[dateString].length == 0){
+			issueDate[dateString] = [dateString,null,null,null];
+		}
+		else{
+			for(var i = 1; i < bugData[dateString].length; i++){
+				var product = bugData[dateString][i][6];
+				if(products[product] === undefined){
+					product = "Other";
+				}
+		
+				issueCount++;
+				if(productIssueCount[product] === undefined){
+					productIssueCount[product] = 0;
+				}
+				productIssueCount[product]++;
+		
+				if(bugData[dateString][i][4] == "open"){
+					openIssueCount++;
+					if(productOpenIssueCount[product] === undefined){
+						productOpenIssueCount[product] = 0;
+					}
+					productOpenIssueCount[product]++;
+				}
+		
+			}
+			issueDate[dateString] = [dateString, issueCount, openIssueCount, null];
+			if(dateString == actualStartDate){
+				issueDate[dateString][3] = openIssueCount;
+			}
+			for(var product in productIssueCount){
+				if(productIssueDate[product] === undefined){
+					productIssueDate[product] = {};
+				}
+				productIssueDate[product][dateString] = [dateString, productIssueCount[product], productOpenIssueCount[product], null];
+		
+				if(dateString == actualStartDate){
+					productIssueDate[product][dateString][3] = productOpenIssueCount[product];
+				}
+			}
+		}
+		date.setDate(date.getDate()+1);
+	}
+	$(document).trigger("datarollupcomplete");
 }
