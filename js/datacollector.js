@@ -1,6 +1,7 @@
 var products = {"Core": "Platform", "gaia": "Gaia", "Marketplace": "Marketplace", "Boot2Gecko": "Boot2Gecko", "Other": "Other"}; 
-var issueDate = {}; 
-var productIssueDate = {};
+var otherProducts = [];
+var totalIssueRollupByDate = {}; 
+var productIssueRollupByDate = {};
 var bugData = {};
 
 $(document).ready(function () {
@@ -84,12 +85,13 @@ function rollupData(){
 		var productIssueCount = {};
 		var productOpenIssueCount = {};
 		if(bugData[dateString].length == 0){
-			issueDate[dateString] = [dateString,null,null,null];
+			totalIssueRollupByDate[dateString] = [dateString,null,null,null];
 		}
 		else{
 			for(var i = 1; i < bugData[dateString].length; i++){
 				var product = bugData[dateString][i][6];
 				if(products[product] === undefined){
+					otherProducts.push(product);
 					product = "Other";
 				}
 		
@@ -108,18 +110,18 @@ function rollupData(){
 				}
 		
 			}
-			issueDate[dateString] = [dateString, issueCount, openIssueCount, null];
+			totalIssueRollupByDate[dateString] = [dateString, issueCount, openIssueCount, null];
 			if(dateString == actualStartDate){
-				issueDate[dateString][3] = openIssueCount;
+				totalIssueRollupByDate[dateString][3] = openIssueCount;
 			}
 			for(var product in productIssueCount){
-				if(productIssueDate[product] === undefined){
-					productIssueDate[product] = {};
+				if(productIssueRollupByDate[product] === undefined){
+					productIssueRollupByDate[product] = {};
 				}
-				productIssueDate[product][dateString] = [dateString, productIssueCount[product], productOpenIssueCount[product], null];
+				productIssueRollupByDate[product][dateString] = [dateString, productIssueCount[product], productOpenIssueCount[product], null];
 		
 				if(dateString == actualStartDate){
-					productIssueDate[product][dateString][3] = productOpenIssueCount[product];
+					productIssueRollupByDate[product][dateString][3] = productOpenIssueCount[product];
 				}
 			}
 		}

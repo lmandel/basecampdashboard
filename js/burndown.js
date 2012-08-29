@@ -17,14 +17,14 @@ function drawBurndownChart() {
 	while(date.getTime() < endDate.getTime()){
 		var dateString = getDateAsString(date);
 		
-		if(issueDate[dateString] === undefined){
+		if(totalIssueRollupByDate[dateString] === undefined){
 			data[i] = [dateString, null, null, null];
 			if(dateString == actualEndDate){
 				data[i] = [actualEndDate, null, null, 0];
 			}
 		}
 		else{
-			data[i] = issueDate[dateString];
+			data[i] = totalIssueRollupByDate[dateString];
 			
 		}
 		date.setDate(date.getDate()+1);
@@ -65,14 +65,14 @@ function drawProductBurndownCharts(){
 		while(date.getTime() < endDate.getTime()){
 			var dateString = getDateAsString(date);
 			
-			if(productIssueDate[product][dateString] === undefined){
+			if(productIssueRollupByDate[product][dateString] === undefined){
 				data[i] = [dateString, null, null, null];
 				if(dateString == actualEndDate){
 					data[i] = [actualEndDate, null, null, 0];
 				}
 			}
 			else{
-				data[i] = productIssueDate[product][dateString];
+				data[i] = productIssueRollupByDate[product][dateString];
 				
 			}
 			date.setDate(date.getDate()+1);
@@ -103,7 +103,7 @@ function calculateFindFixRates(){
 	var endDateString = getDateAsString(endDate);
 
 	for (var product in products) {
-		while(productIssueDate[product][endDateString] === undefined){
+		while(productIssueRollupByDate[product][endDateString] === undefined){
 			endDate.setDate(endDate.getDate()-1);
 			endDateString = getDateAsString(endDate);
 		}
@@ -114,10 +114,10 @@ function calculateFindFixRates(){
 	var startDateString = getDateAsString(startDate);
 
 	for(var product in products){
-		var endDateTotal = productIssueDate[product][endDateString][1];
-		var endDateOpen = productIssueDate[product][endDateString][2];
-		var startDateTotal = productIssueDate[product][startDateString][1];
-		var startDateOpen = productIssueDate[product][startDateString][2];
+		var endDateTotal = productIssueRollupByDate[product][endDateString][1];
+		var endDateOpen = productIssueRollupByDate[product][endDateString][2];
+		var startDateTotal = productIssueRollupByDate[product][startDateString][1];
+		var startDateOpen = productIssueRollupByDate[product][startDateString][2];
 
 		var find = endDateTotal - startDateTotal;
 		var fix = (endDateTotal - endDateOpen) - (startDateTotal - startDateOpen);
