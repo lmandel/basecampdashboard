@@ -1,25 +1,15 @@
 var header = ['Date', 'Total Scope', 'Open', 'Track'];
 var actualStartDate = "2012-07-14";
 var actualEndDate = "2012-08-31";
-var startDate = "2012-07-15";
 var products = {"Core": "Platform", "gaia": "Gaia", "Marketplace": "Marketplace", "Boot2Gecko": "Boot2Gecko", "Other": "Other"}; 
 var today = new Date(Date.now());
 var issueDate = {}; 
 var productIssueDate = {};
 
 function createBurndownChart(){
-	$(document).on("dataupdate", dataIsInForAllDates);
 	$(document).on("alldatain", drawBurndownChart);
 	$(document).on("alldatain", drawProductBurndownCharts);
 	$(document).on("alldatain", calculateFindFixRates);
-	
-	var date = new Date(startDate);
-	date.setHours(0, 0, 0, 0);
-	while (date.getTime() < today.getTime()){
-		var dateString = getDateString(date);
-		getDataForDate(dateString);
-		date.setDate(date.getDate()+1);
-	}
 }
 
 function drawBurndownChart() {
@@ -31,7 +21,7 @@ function drawBurndownChart() {
 	endDate.setDate(endDate.getDate()+2);
 	var i = 1;
 	while(date.getTime() < endDate.getTime()){
-		var dateString = getDateString(date);
+		var dateString = getDateAsString(date);
 		
 		if(issueDate[dateString] === undefined){
 			data[i] = [dateString, null, null, null];
@@ -79,7 +69,7 @@ function drawProductBurndownCharts(){
 		endDate.setDate(endDate.getDate()+2);
 		var i = 1;
 		while(date.getTime() < endDate.getTime()){
-			var dateString = getDateString(date);
+			var dateString = getDateAsString(date);
 			
 			if(productIssueDate[product][dateString] === undefined){
 				data[i] = [dateString, null, null, null];
@@ -113,104 +103,21 @@ function drawProductBurndownCharts(){
 	
 }
 
-function dataIsInForAllDates(){
-	var date = new Date(startDate);
-	date.setHours(0, 0, 0, 0);
-	while(date.getTime() < today.getTime()){
-		var dateString = getDateString(date);
-		if(issueDate[dateString] === undefined){
-			return false;
-		}
-		date.setDate(date.getDate()+1);
-	}
-	$(document).trigger("alldatain");
-}
-
-function getDataForDate(date){
-	var urlbase = "data/";
-	var url = urlbase + date + ".csv";
-	$.ajax({
-		  url: url,
-		  crossDomain:true, 
-		  dataType: 'text',
-		  success: function(data){
-		    parseDataForDate(date, data);
-		  },
-		  error: function(jqXHR, textStatus, errorThrown){
-		    //alert('Uh oh. I couldn\'t find any bug/issue data for ' + url + '. ' + errorThrown);
-			setEmptyDataForDate(date);
-		  }
-		});
-}
-
-function parseDataForDate(date, data){
-	var csvData = parseCSVData(data);
-	//var lines = data.split(/\r\n|\n/);
-	
-	var issueCount = 0;
-	var openIssueCount = 0;
-	var productIssueCount = {};
-	var productOpenIssueCount = {};
-	
-	for(var i = 1; i < csvData.length; i++){
-		var product = csvData[i][6];
-		if(products[product] === undefined){
-			product = "Other";
-		}
-		
-		issueCount++;
-		if(productIssueCount[product] === undefined){
-			productIssueCount[product] = 0;
-		}
-		productIssueCount[product]++;
-		
-		if(csvData[i][4] == "open"){
-			openIssueCount++;
-			if(productOpenIssueCount[product] === undefined){
-				productOpenIssueCount[product] = 0;
-			}
-			productOpenIssueCount[product]++;
-		}
-		
-	}
-	issueDate[date] = [date, issueCount, openIssueCount, null];
-	if(date == actualStartDate){
-		issueDate[date][3] = openIssueCount;
-	}
-	for(var product in productIssueCount){
-		if(productIssueDate[product] === undefined){
-			productIssueDate[product] = {};
-		}
-		productIssueDate[product][date] = [date, productIssueCount[product], productOpenIssueCount[product], null];
-		
-		if(date == actualStartDate){
-			productIssueDate[product][date][3] = productOpenIssueCount[product];
-		}
-	}
-	
-	$(document).trigger("dataupdate");
-}
-
-function setEmptyDataForDate(date){
-	issueDate[date] = [date,null,null,null];
-	$(document).trigger("dataupdate");
-}
-
 function calculateFindFixRates(){
 	var rateDiv = document.getElementById("rate_div");
 	var endDate = new Date(Date.now());
-	var endDateString = getDateString(endDate);
+	var endDateString = getDateAsString(endDate);
 
 	for (var product in products) {
 		while(productIssueDate[product][endDateString] === undefined){
 			endDate.setDate(endDate.getDate()-1);
-			endDateString = getDateString(endDate);
+			endDateString = getDateAsString(endDate);
 		}
 	    break;
 	}
 	var startDate = new Date();
 	startDate.setDate(endDate.getDate()-7);
-	var startDateString = getDateString(startDate);
+	var startDateString = getDateAsString(startDate);
 
 	for(var product in products){
 		var endDateTotal = productIssueDate[product][endDateString][1];
@@ -228,17 +135,4 @@ function calculateFindFixRates(){
 		div.innerHTML = products[product] + ": " +rate;
 		rateDiv.appendChild(div);
 	}
-}
-
-function getDateString(date){
-	var year = date.getFullYear();
-	var month = date.getMonth()+1;
-	if (month < 10){
-		month = "0" + month;
-	}
-	var day = date.getDate();
-	if(day < 10){
-		day = "0" + day;
-	}
-	return year + "-" + month + "-" + day;
 }
