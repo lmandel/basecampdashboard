@@ -4,6 +4,7 @@ function createBurndownChart(){
 	$(document).on("datarollupcomplete", drawBurndownChart);
 	$(document).on("datarollupcomplete", drawProductBurndownCharts);
 	$(document).on("datarollupcomplete", calculateFindFixRates);
+	$(document).on("alldatain", populateBugTable);
 }
 
 function drawBurndownChart() {
@@ -129,4 +130,21 @@ function calculateFindFixRates(){
 		div.innerHTML = products[product] + ": " +rate;
 		rateDiv.appendChild(div);
 	}
+}
+
+function populateBugTable(){
+	$('#issue_table_div').html( '<table cellpadding="0" cellspacing="0" border="0" class="display" id="bugTable"></table>' );
+	var cols = [];
+	var thedate = getDateAsString(today);
+	var bugDataA= bugData[thedate];
+	var bugs = $.extend([], bugDataA);
+	var bugCols = bugs.shift();
+	for(var i = 0; i < bugCols.length; i++){
+		cols.push({"sTitle": bugCols[i]});
+	}
+	
+	$('#bugTable').dataTable( {
+		"aaData": bugs,
+		"aoColumns": cols
+	} );	
 }

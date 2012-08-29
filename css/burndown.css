@@ -27,7 +27,16 @@ body {
 }
 
 #rate_div {
-	height: 500px;
+	
+}
+
+#issue_table_div {
+	text-align: center;
+}
+
+#issue_table_div table {
+	width: 90%;
+	font: 14px/24px Georgia, serif;
 }
 
 /* Mozilla CSS */
