@@ -85,7 +85,11 @@ function rollupData(){
 		var productIssueCount = {};
 		var productOpenIssueCount = {};
 		if(bugData[dateString].length == 0){
-			totalIssueRollupByDate[dateString] = [dateString,null,null,null];
+			totalIssueRollupByDate[dateString] = [dateString,null,null];
+			
+			if(showTrack){
+				totalIssueRollupByDate[dateString].push(null);
+			}
 		}
 		else{
 			for(var i = 1; i < bugData[dateString].length; i++){
@@ -110,17 +114,24 @@ function rollupData(){
 				}
 		
 			}
-			totalIssueRollupByDate[dateString] = [dateString, issueCount, openIssueCount, null];
-			if(dateString == actualStartDate){
+			totalIssueRollupByDate[dateString] = [dateString, issueCount, openIssueCount];
+			if(showTrack){
+				totalIssueRollupByDate[dateString].push(null);
+			}
+			
+			if(showTrack && dateString == actualStartDate){
 				totalIssueRollupByDate[dateString][3] = openIssueCount;
 			}
 			for(var product in productIssueCount){
 				if(productIssueRollupByDate[product] === undefined){
 					productIssueRollupByDate[product] = {};
 				}
-				productIssueRollupByDate[product][dateString] = [dateString, productIssueCount[product], productOpenIssueCount[product], null];
+				productIssueRollupByDate[product][dateString] = [dateString, productIssueCount[product], productOpenIssueCount[product]];
+				if(showTrack){
+					productIssueRollupByDate[product][dateString].push(null);
+				}
 		
-				if(dateString == actualStartDate){
+				if(showTrack && dateString == actualStartDate){
 					productIssueRollupByDate[product][dateString][3] = productOpenIssueCount[product];
 				}
 			}

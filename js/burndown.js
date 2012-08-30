@@ -1,4 +1,3 @@
-var header = ['Date', 'Total Scope', 'Open', 'Track'];
 var tableIgnoreCols = ['url', 'patch'];
 
 function createBurndownChart(){
@@ -10,7 +9,7 @@ function createBurndownChart(){
 
 function drawBurndownChart() {
 	var data = [];
-	data[0] = header;
+	data[0] = getHeader();
 		
 	var date = new Date(startDate);
 	var endDate = new Date(actualEndDate);
@@ -20,8 +19,11 @@ function drawBurndownChart() {
 		var dateString = getDateAsString(date);
 		
 		if(totalIssueRollupByDate[dateString] === undefined){
-			data[i] = [dateString, null, null, null];
-			if(dateString == actualEndDate){
+			data[i] = [dateString, null, null];
+			if(showTrack){
+				data[i].push(null);
+			}
+			if(showTrack && dateString == actualEndDate){
 				data[i] = [actualEndDate, null, null, 0];
 			}
 		}
@@ -58,7 +60,7 @@ function drawProductBurndownCharts(){
 		productChartDiv.appendChild(div);
 	
 		var data = [];
-		data[0] = header;
+		data[0] = getHeader();
 		
 		var date = new Date(startDate);
 		var endDate = new Date(actualEndDate);
@@ -68,8 +70,11 @@ function drawProductBurndownCharts(){
 			var dateString = getDateAsString(date);
 			
 			if(productIssueRollupByDate[product][dateString] === undefined){
-				data[i] = [dateString, null, null, null];
-				if(dateString == actualEndDate){
+				data[i] = [dateString, null, null];
+				if(showTrack){
+					data[i].push(null);
+				}
+				if(showTrack && dateString == actualEndDate){
 					data[i] = [actualEndDate, null, null, 0];
 				}
 			}
@@ -97,6 +102,13 @@ function drawProductBurndownCharts(){
         chart.draw(chartData, options);
 	}
 	
+}
+
+function getHeader(){
+	if(showTrack){
+		return ['Date', 'Total Scope', 'Open Bugs/Issues', 'Track'];
+	}
+	return ['Date', 'Total Scope', 'Open Bugs/Issues'];
 }
 
 function calculateFindFixRates(){
