@@ -1,4 +1,4 @@
-var products = {"Core": "Platform", "gaia": "Gaia", "Marketplace": "Marketplace", "Boot2Gecko": "Boot2Gecko", "Other": "Other"}; 
+var products = {"Core": "Platform", "gaia": "Gaia", "Marketplace": "Marketplace", "Other": "Other"}; 
 var otherProducts = [];
 var totalIssueRollupByDate = {}; 
 var productIssueRollupByDate = {};
