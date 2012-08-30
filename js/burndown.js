@@ -1,4 +1,5 @@
 var header = ['Date', 'Total Scope', 'Open', 'Track'];
+var tableIgnoreCols = ['url', 'patch'];
 
 function createBurndownChart(){
 	$(document).on("datarollupcomplete", drawBurndownChart);
@@ -140,7 +141,26 @@ function populateBugTable(){
 	var bugs = $.extend([], bugDataA);
 	var bugCols = bugs.shift();
 	for(var i = 0; i < bugCols.length; i++){
-		cols.push({"sTitle": bugCols[i]});
+		var col = bugCols[i];
+		if(tableIgnoreCols.indexOf(col) != -1){
+			cols.push({"sTitle": col,
+				       "bSearchable": false,
+					   "bVisible":    false});
+		}
+		else{
+			if(col == "id"){
+				cols.push({"sTitle": col,
+				"fnRender": function(obj) {
+					var sReturn = obj.aData[ obj.iDataColumn ];
+					var url = obj.aData[2];
+					sReturn = "<a href=\"" + url + "\">" + sReturn + "</a>";
+					return sReturn;
+				}});
+			}
+			else{
+				cols.push({"sTitle": col});
+			}
+		}
 	}
 	
 	$('#bugTable').dataTable( {
