@@ -95,7 +95,9 @@ function rollupData(){
 			for(var i = 1; i < bugData[dateString].length; i++){
 				var product = bugData[dateString][i][6];
 				if(products[product] === undefined){
-					otherProducts.push(product);
+					if(otherProducts.indexOf(product) == -1){
+						otherProducts.push(product);
+					}
 					product = "Other";
 				}
 		
