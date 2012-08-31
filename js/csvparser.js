@@ -10,7 +10,7 @@ function parseCSVData(data){
 		for(var j = 0; j < 9; j++){
 			var cell = cols[j+offset];
 			if(cell.charAt(0) === "\""){
-				while(cell.charAt(cell.length-1) != "\""){
+				while(cell.charAt(cell.length-1) != "\"" || cols[j+offset+1].charAt(0) == "\""){
 					offset++;
 					cell = cell + "," + cols[j+offset];
 				}
