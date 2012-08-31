@@ -21,27 +21,32 @@
     <title>Basecamp Issue Dashboard</title>
   </head>
   <body>
-    <h1>Basecamp Issue Dashboard</h1>
-    <div id="chart_div" class="mainChart"></div>
-    <p>The basecamp burndown chart includes issue information gathered from Bugzilla and Github.</p>
-    <ul>
-    	<li>Total Scope = All issues flagged as blocking-basecamp+ (open+closed)</li>
-    	<li>Open = All open blocking-basecamp+ issues in Bugzilla+Github</li>
-    </ul>
-    <p>The burndown chart provides a view into the current state of the project scope and open issues.
-    The "Open" data represents the work that is left until v1 of basecamp will be considered complete.
-    This line alone is not enough to demonstrate the work of the project team. The current open count
-    needs to be viewed in relation to the total scope, which represents the incoming issue rate.</p>
-    <p>As basecamp progresses towards the v1 release, the expectation is that the total scope will
-    flatten out (as there are fewer incoming issues). At this point the open count should start to 
-    decrease more rapidly as we progress through the shutdown phase of the project.</p>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <div id="rate_div"><h2>Find/Fix Rate (7 days)</h2></div>
-    <div id="product_charting_div"></div>
-    <div id="issue_table_div"></div>
+  	<div id="pagecontainer">
+    	<h1>Basecamp Issue Dashboard</h1>
+    	<div id="chart_div" class="mainChart"></div>
+    	<div id="about">
+    	<p>The basecamp burndown chart includes issue information gathered from Bugzilla and Github.</p>
+    	<ul>
+    		<li>Total Scope = All issues flagged as blocking-basecamp+ (open+closed)</li>
+    		<li>Open = All open blocking-basecamp+ issues in Bugzilla+Github</li>
+    	</ul>
+    	<p>The burndown chart provides a view into the current state of the project scope and open issues.
+    	The "Open" data represents the work that is left until v1 of basecamp will be considered complete.
+    	This line alone is not enough to demonstrate the work of the project team. The current open count
+    	needs to be viewed in relation to the total scope, which represents the incoming issue rate.</p>
+    	<p>As basecamp progresses towards the v1 release, the expectation is that the total scope will
+    	flatten out (as there are fewer incoming issues). At this point the open count should start to 
+    	decrease more rapidly as we progress through the shutdown phase of the project.</p>
+    	</div>
+    	<br/>
+    	<br/>
+    	<br/>
+    	<br/>
+    	<div id="rate_div"><h2>Find/Fix Rate (7 days)</h2></div>
+    	<div id="product_charting_div"></div>
+    	<div id="chartNotes"></div>
+    	<div id="issue_table_div"></div>
+    </div>
   </body>
 </html>
 

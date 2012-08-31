@@ -1,8 +1,11 @@
+var OTHER_PRODUCTS_NOTE = "Other = ";
+
 var tableIgnoreCols = ['url', 'patch'];
 
 function createBurndownChart(){
 	$(document).on("datarollupcomplete", drawBurndownChart);
 	$(document).on("datarollupcomplete", drawProductBurndownCharts);
+	$(document).on("datarollupcomplete", addChartNotes);
 	$(document).on("datarollupcomplete", calculateFindFixRates);
 	$(document).on("alldatain", populateBugTable);
 }
@@ -86,7 +89,6 @@ function drawProductBurndownCharts(){
 			i++;
 		}
         var chartData = google.visualization.arrayToDataTable(data);
-        //chartData.addRow(["2012-08-31", null, null, 0]);
         
         var options = {
           title: products[product] + ' Burndown', 
@@ -101,7 +103,6 @@ function drawProductBurndownCharts(){
         var chart = new google.visualization.LineChart(div);
         chart.draw(chartData, options);
 	}
-	
 }
 
 function getHeader(){
@@ -111,6 +112,20 @@ function getHeader(){
 	return ['Date', 'Total Scope', 'Open Bugs/Issues'];
 }
 
+function addChartNotes(){
+	var chartNotesDiv = $("#chartNotes");
+	var p = $("<p>");
+	var otherNote = OTHER_PRODUCTS_NOTE;
+	otherProducts.sort();
+	for(var i = 0; i < otherProducts.length; i++){
+		otherNote += otherProducts[i];
+		if(i != otherProducts.length-1){
+			otherNote += ", ";
+		}
+	}
+	p.append(otherNote);
+	chartNotesDiv.append(p);
+}
 function calculateFindFixRates(){
 	var rateDiv = document.getElementById("rate_div");
 	var endDate = new Date(Date.now());
@@ -137,7 +152,9 @@ function calculateFindFixRates(){
 		var fix = (endDateTotal - endDateOpen) - (startDateTotal - startDateOpen);
 		
 		var rate = Math.round((find/fix)*100)/100;
-		
+		if(fix == 0) {
+			rate = 0;
+		}
 		var div = document.createElement('div');
 		div.setAttribute("class", "findfixrate");
 		div.innerHTML = products[product] + ": " +rate;
@@ -149,8 +166,7 @@ function populateBugTable(){
 	$('#issue_table_div').html( '<table cellpadding="0" cellspacing="0" border="0" class="display" id="bugTable"></table>' );
 	var cols = [];
 	var thedate = getDateAsString(today);
-	var bugDataA= bugData[thedate];
-	var bugs = $.extend([], bugDataA);
+	var bugs = $.extend([], bugData[thedate]);
 	var bugCols = bugs.shift();
 	for(var i = 0; i < bugCols.length; i++){
 		var col = bugCols[i];

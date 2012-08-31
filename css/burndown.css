@@ -4,6 +4,12 @@ body {
 	background-repeat: repeat-x;
 }
 
+#pagecontainer {
+	width: 1300px;
+	text-align: left;
+	margin: auto
+}
+
 .mainChart {
 	width: 610px; 
 	height: 400px;
@@ -47,7 +53,7 @@ body {font: 16px/24px Georgia, serif;}
 
 .huge {font-size: 108px; letter-spacing: -4px; line-height: 100%;}
 .large {font-size: 72px; letter-spacing: -3px; line-height: 100%;}
-h1 {font-size: 48px; letter-spacing: -2px; line-height: 100%;}
+h1 {font-size: 48px; letter-spacing: -2px; line-height: 100%; text-align: center;}
 h2 {font-size: 32px; letter-spacing: -1px; line-height: 100%;}
 h3 {font-size: 28px; letter-spacing: -0.5px; line-height: 100%;}
 h4 {font-size: 24px; letter-spacing: -0.25px; line-height: 100%;}
