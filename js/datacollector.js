@@ -3,10 +3,13 @@ var otherProducts = [];
 var totalIssueRollupByDate = {}; 
 var productIssueRollupByDate = {};
 var bugData = {};
+var latestDataDate = null;
 
 $(document).ready(function () {
 	$(document).on("dataupdate", dataIsInForAllDates);
+	$(document).on("alldatain", findLatestDataDate);
 	$(document).on("alldatain", rollupData);
+	
 	getData();
 });
 
@@ -141,4 +144,21 @@ function rollupData(){
 		date.setDate(date.getDate()+1);
 	}
 	$(document).trigger("datarollupcomplete");
+}
+
+function findLatestDataDate(){
+	var oldestDate = new Date(startDate);
+	var date = new Date(Date.now());
+	var dateString = null;
+	while(date > oldestDate){
+		dateString = getDateAsString(date);
+		if(bugData[dateString].length != 0){
+			break;
+		}
+		date.setDate(date.getDate() - 1);
+	}
+	if(dateString == null){
+		dateString = startDate;
+	}
+	latestDataDate = dateString;
 }
