@@ -3,11 +3,17 @@ var OTHER_PRODUCTS_NOTE = "Other = ";
 var tableIgnoreCols = ['url', 'patch'];
 
 function createBurndownChart(){
+	$(document).on("datarollupcomplete", reportLastUpdated);
 	$(document).on("datarollupcomplete", drawBurndownChart);
 	$(document).on("datarollupcomplete", drawProductBurndownCharts);
 	$(document).on("datarollupcomplete", addChartNotes);
 	$(document).on("datarollupcomplete", calculateFindFixRates);
 	$(document).on("datarollupcomplete", populateBugTable);
+}
+
+function reportLastUpdated(){
+	var lastUpdatedDiv = $("#lastUpdated");
+	lastUpdatedDiv.append("Data last updated " + latestDataDate);
 }
 
 function drawBurndownChart() {
