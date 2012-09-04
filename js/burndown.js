@@ -191,7 +191,7 @@ function populateBugTable(){
 	issueTable.attr("id","bugTable");
 	issueTable.attr("class","bugtable");
 	issueTableDiv.append(issueTable);
-	//.html( '<table cellpadding="0" cellspacing="0" border="0" class="display" id="bugTable"></table>' );
+	
 	var cols = [];
 	var bugs = $.extend([], bugData[latestDataDate]);
 	var bugCols = bugs.shift();
