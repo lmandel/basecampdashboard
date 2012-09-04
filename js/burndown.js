@@ -1,3 +1,5 @@
+var TOTAL_SCOPE_NOTE = "Total Scope = All issues flagged as blocking-basecamp+ (open+closed)";
+var OPEN_NOTE = "Open = All open blocking-basecamp+ issues in Bugzilla+Github";
 var OTHER_PRODUCTS_NOTE = "Other = ";
 
 var tableIgnoreCols = ['url', 'patch'];
@@ -53,7 +55,7 @@ function drawBurndownChart() {
     var options = {
       title: 'Basecamp Burndown', 
       interpolateNulls: true,
-      height: 398,
+      height: 432,
       width: 608,
       chartArea: {left:70,top:40,width:"85%",height:"70%"},
       legend: {position: 'in'}
@@ -129,6 +131,12 @@ function getHeader(){
 function addChartNotes(){
 	var chartNotesDiv = $("#chartNotes");
 	var p = $("<p>");
+	p.append(TOTAL_SCOPE_NOTE);
+	chartNotesDiv.append(p);
+	p = $("<p>");
+	p.append(OPEN_NOTE);
+	chartNotesDiv.append(p);
+	p = $("<p>");
 	var otherNote = OTHER_PRODUCTS_NOTE;
 	otherProducts.sort();
 	for(var i = 0; i < otherProducts.length; i++){
@@ -178,7 +186,12 @@ function calculateFindFixRates(){
 }
 
 function populateBugTable(){
-	$('#issue_table_div').html( '<table cellpadding="0" cellspacing="0" border="0" class="display" id="bugTable"></table>' );
+	var issueTableDiv = $('#issue_table_div');
+	var issueTable = $("<table>");
+	issueTable.attr("id","bugTable");
+	issueTable.attr("class","bugtable");
+	issueTableDiv.append(issueTable);
+	//.html( '<table cellpadding="0" cellspacing="0" border="0" class="display" id="bugTable"></table>' );
 	var cols = [];
 	var bugs = $.extend([], bugData[latestDataDate]);
 	var bugCols = bugs.shift();

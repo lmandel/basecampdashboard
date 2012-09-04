@@ -5,7 +5,7 @@ body {
 }
 
 #pagecontainer {
-	width: 1300px;
+	width: 1255px;
 	text-align: left;
 	margin: auto
 }
@@ -18,7 +18,7 @@ body {
 
 .mainChart {
 	width: 610px; 
-	height: 400px;
+	height: 434px;
 	padding:1px;
 	margin: 5px;
 	float: left;
@@ -43,11 +43,15 @@ body {
 }
 
 #issue_table_div {
-	text-align: center;
+
+}
+
+.bugtable {
+	border-spacing:0;
+  	border-collapse:collapse;
 }
 
 #issue_table_div table {
-	width: 90%;
 	font: 14px/24px Georgia, serif;
 }
 
