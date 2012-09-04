@@ -15,7 +15,9 @@ function createBurndownChart(){
 
 function reportLastUpdated(){
 	var lastUpdatedDiv = $("#lastUpdated");
-	lastUpdatedDiv.append("Data last updated " + latestDataDate);
+	var date = new Date(latestDataDate);
+	//date.setDate(date.getDate()-1);
+	lastUpdatedDiv.append("Data last updated " + getDateAsString(date));
 }
 
 function drawBurndownChart() {
