@@ -2,7 +2,7 @@ var TOTAL_SCOPE_NOTE = "Total Scope = All issues flagged as blocking-basecamp+ (
 var OPEN_NOTE = "Open = All open blocking-basecamp+ issues in Bugzilla+Github";
 var OTHER_PRODUCTS_NOTE = "Other = ";
 
-var tableIgnoreCols = ['url', 'patch'];
+var tableIgnoreCols = ['url', 'patch', 'feature'];
 
 function createBurndownChart(){
 	$(document).on("datarollupcomplete", reportLastUpdated);
