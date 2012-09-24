@@ -58,7 +58,8 @@ function drawBurndownChart() {
       height: 432,
       width: 608,
       chartArea: {left:70,top:40,width:"85%",height:"70%"},
-      legend: {position: 'in'}
+      legend: {position: 'in'},
+      vAxis: {baseline: 0}
     };
         
     var chartDiv = document.getElementById('chart_div');
@@ -114,7 +115,8 @@ function drawProductBurndownCharts(){
 			  width:298,
 			  legend: {position: 'none'},
 			  hAxis: {textPosition: 'none'},
-			  chartArea: {left:30,top:20,width:"95%",height:"85%"}
+			  chartArea: {left:30,top:20,width:"95%",height:"85%"},
+		      vAxis: {baseline: 0}
 			};
 
 			var chart = new google.visualization.LineChart(div);
