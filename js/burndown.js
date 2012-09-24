@@ -77,33 +77,34 @@ function drawProductBurndownCharts(){
 	
 		var data = [];
 		data[0] = getHeader();
-		
-		var date = new Date(startDate);
-		var endDate = new Date(latestDataDate);
-		endDate.setDate(endDate.getDate()+1);
-		if(showTrack){
-			endDate = new Date(actualEndDate);
-		}
-		endDate.setDate(endDate.getDate()+2);
-		var i = 1;
-		while(date.getTime() < endDate.getTime()){
-			var dateString = getDateAsString(date);
+		if(productIssueRollupByDate[product] !== undefined){
+			var date = new Date(startDate);
+			var endDate = new Date(latestDataDate);
+			endDate.setDate(endDate.getDate()+1);
+			if(showTrack){
+				endDate = new Date(actualEndDate);
+			}
+			endDate.setDate(endDate.getDate()+2);
+			var i = 1;
+			while(date.getTime() < endDate.getTime()){
+				var dateString = getDateAsString(date);
 			
-			if(productIssueRollupByDate[product][dateString] === undefined){
-				data[i] = [dateString, null, null];
-				if(showTrack){
-					data[i].push(null);
+				if(productIssueRollupByDate[product][dateString] === undefined){
+					data[i] = [dateString, null, null];
+					if(showTrack){
+						data[i].push(null);
+					}
+					if(showTrack && dateString == actualEndDate){
+						data[i] = [actualEndDate, null, null, 0];
+					}
 				}
-				if(showTrack && dateString == actualEndDate){
-					data[i] = [actualEndDate, null, null, 0];
-				}
-			}
-			else{
-				data[i] = productIssueRollupByDate[product][dateString];
+				else{
+					data[i] = productIssueRollupByDate[product][dateString];
 				
+				}
+				date.setDate(date.getDate()+1);
+				i++;
 			}
-			date.setDate(date.getDate()+1);
-			i++;
 		}
         var chartData = google.visualization.arrayToDataTable(data);
         
@@ -162,10 +163,17 @@ function calculateFindFixRates(){
 		}
 	    break;
 	}
-	var startDate = new Date(endDateString);
-	startDate.setDate(endDate.getDate()-7);
-	var startDateString = getDateAsString(startDate);
+	var startDateForFindFix = new Date(endDateString);
+	startDateForFindFix.setDate(endDate.getDate()-7);
+	var startDateString = getDateAsString(startDateForFindFix);
 
+	if(new Date(startDate) > startDateForFindFix){
+		var div = document.createElement('div');
+		div.setAttribute("class", "findfixrate");
+		div.innerHTML = "At least 7 days of data are required to calculate the find/fix rate";
+		rateDiv.appendChild(div);
+		return;
+	}
 	for(var product in products){
 		var endDateTotal = productIssueRollupByDate[product][endDateString][1];
 		var endDateOpen = productIssueRollupByDate[product][endDateString][2];
