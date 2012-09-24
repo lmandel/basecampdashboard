@@ -51,7 +51,6 @@ function drawBurndownChart() {
 		i++;
 	}
     var chartData = google.visualization.arrayToDataTable(data);
-    //chartData.addRow(["2012-08-31", null, null, 0]);
         
     var options = {
       title: 'Basecamp Burndown', 
@@ -105,21 +104,22 @@ function drawProductBurndownCharts(){
 				date.setDate(date.getDate()+1);
 				i++;
 			}
-		}
-        var chartData = google.visualization.arrayToDataTable(data);
-        
-        var options = {
-          title: products[product] + ' Burndown', 
-          interpolateNulls: true,
-          height:208,
-          width:298,
-          legend: {position: 'none'},
-          hAxis: {textPosition: 'none'},
-          chartArea: {left:30,top:20,width:"95%",height:"85%"}
-        };
 
-        var chart = new google.visualization.LineChart(div);
-        chart.draw(chartData, options);
+			var chartData = google.visualization.arrayToDataTable(data);
+        
+			var options = {
+			  title: products[product] + ' Burndown', 
+			  interpolateNulls: true,
+			  height:208,
+			  width:298,
+			  legend: {position: 'none'},
+			  hAxis: {textPosition: 'none'},
+			  chartArea: {left:30,top:20,width:"95%",height:"85%"}
+			};
+
+			var chart = new google.visualization.LineChart(div);
+			chart.draw(chartData, options);
+		}
 	}
 }
 
