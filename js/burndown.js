@@ -223,6 +223,15 @@ function populateBugTable(){
 					return sReturn;
 				}});
 			}
+			else if(col == "title"){
+				cols.push({"sTitle": col,
+				"fnRender": function(obj) {
+					var sReturn = obj.aData[ obj.iDataColumn ];
+					sReturn = sReturn.replace("<", "&lt;", "g")
+					sReturn = sReturn.replace(">", "&gt;", "g");
+					return sReturn;
+				}});
+			}	
 			else{
 				cols.push({"sTitle": col});
 			}
