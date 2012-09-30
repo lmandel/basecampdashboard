@@ -177,6 +177,9 @@ function calculateFindFixRates(){
 		return;
 	}
 	for(var product in products){
+		if(productIssueRollupByDate[product] === undefined){
+			continue;
+		}
 		var endDateTotal = productIssueRollupByDate[product][endDateString][1];
 		var endDateOpen = productIssueRollupByDate[product][endDateString][2];
 		var startDateTotal = productIssueRollupByDate[product][startDateString][1];
