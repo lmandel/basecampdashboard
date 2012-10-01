@@ -153,6 +153,8 @@ function findLatestDataDate(){
 	while(date > oldestDate){
 		dateString = getDateAsString(date);
 		if(bugData[dateString].length != 0){
+			date.setDate(date.getDate() + 1);
+			dateString = getDateAsString(date);
 			break;
 		}
 		date.setDate(date.getDate() - 1);
