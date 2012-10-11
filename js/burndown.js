@@ -1,6 +1,7 @@
 var TOTAL_SCOPE_NOTE = "Total Scope = All issues flagged as blocking-basecamp+ (open+closed)";
 var OPEN_NOTE = "Open = All open blocking-basecamp+ issues in Bugzilla+Github";
 var OTHER_PRODUCTS_NOTE = "Other = ";
+var PRODUCTS_ORDERED = ['Platform', 'Gaia', 'Marketplace', 'Other'];
 
 var tableIgnoreCols = ['url', 'patch', 'feature'];
 
@@ -69,14 +70,18 @@ function drawBurndownChart() {
 
 function drawProductBurndownCharts(){
 	var productChartDiv = document.getElementById("product_charting_div");
-	for(var product in products){
-		var div = document.createElement('div');
-		div.setAttribute("class", "productBurndownChart");
-		productChartDiv.appendChild(div);
 	
-		var data = [];
-		data[0] = getHeader();
+	for(var i = 0; i < PRODUCTS_ORDERED.length; i++){
+		var product = PRODUCTS_ORDERED[i];
+		
 		if(productIssueRollupByDate[product] !== undefined){
+			var div = document.createElement('div');
+			div.setAttribute("class", "productBurndownChart");
+			productChartDiv.appendChild(div);
+	
+			var data = [];
+			data[0] = getHeader();
+		
 			var date = new Date(startDate);
 			var endDate = new Date(latestDataDate);
 			endDate.setDate(endDate.getDate()+1);
@@ -84,31 +89,31 @@ function drawProductBurndownCharts(){
 				endDate = new Date(actualEndDate);
 			}
 			endDate.setDate(endDate.getDate()+2);
-			var i = 1;
+			var j = 1;
 			while(date.getTime() < endDate.getTime()){
 				var dateString = getDateAsString(date);
 			
 				if(productIssueRollupByDate[product][dateString] === undefined){
-					data[i] = [dateString, null, null];
+					data[j] = [dateString, null, null];
 					if(showTrack){
-						data[i].push(null);
+						data[j].push(null);
 					}
 					if(showTrack && dateString == actualEndDate){
-						data[i] = [actualEndDate, null, null, 0];
+						data[j] = [actualEndDate, null, null, 0];
 					}
 				}
 				else{
-					data[i] = productIssueRollupByDate[product][dateString];
+					data[j] = productIssueRollupByDate[product][dateString];
 				
 				}
 				date.setDate(date.getDate()+1);
-				i++;
+				j++;
 			}
 
 			var chartData = google.visualization.arrayToDataTable(data);
         
 			var options = {
-			  title: products[product] + ' Burndown', 
+			  title: product + ' Burndown', 
 			  interpolateNulls: true,
 			  height:208,
 			  width:298,
@@ -157,7 +162,9 @@ function calculateFindFixRates(){
 	endDate.setDate(endDate.getDate()+1);
 	var endDateString = getDateAsString(endDate);
 
-	for (var product in products) {
+	var productsSorted = PRODUCTS_ORDERED.sort();
+	for (var i = 0; i < productsSorted.length; i++) {
+		var product = productsSorted[1];
 		while(productIssueRollupByDate[product][endDateString] === undefined){
 			endDate.setDate(endDate.getDate()-1);
 			endDateString = getDateAsString(endDate);
@@ -175,7 +182,7 @@ function calculateFindFixRates(){
 		rateDiv.appendChild(div);
 		return;
 	}
-	for(var product in products){
+	for(var product in productIssueRollupByDate){
 		if(productIssueRollupByDate[product] === undefined){
 			continue;
 		}
@@ -193,7 +200,7 @@ function calculateFindFixRates(){
 		}
 		var div = document.createElement('div');
 		div.setAttribute("class", "findfixrate");
-		div.innerHTML = products[product] + ": " +rate;
+		div.innerHTML = product + ": " +rate;
 		rateDiv.appendChild(div);
 	}
 }

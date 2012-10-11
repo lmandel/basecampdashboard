@@ -1,4 +1,12 @@
-var products = {"Core": "Platform", "gaia": "Gaia", "Marketplace": "Marketplace", "Other": "Other"}; 
+var products = {"Core": "Platform", 
+				"General": "Platform",
+				"gaia": "Gaia", 
+				"Gaia": "Gaia", 
+				"Gaia::Browser": "Gaia",
+				"Gaia::Calendar": "Gaia",
+				"Gaia::E-Mail": "Gaia",
+				"Marketplace": "Marketplace", 
+				"Other": "Other"}; 
 var otherProducts = [];
 var totalIssueRollupByDate = {}; 
 var productIssueRollupByDate = {};
@@ -98,9 +106,7 @@ function rollupData(){
 			for(var i = 1; i < bugData[dateString].length; i++){
 				var product = bugData[dateString][i][6];
 				var component = bugData[dateString][i][7];
-				if(component != null){
-					component = component.toLowerCase();
-				}
+				
 				if(products[component] === undefined){
 					if(products[product] === undefined){
 						if(otherProducts.indexOf(product) == -1){
@@ -108,9 +114,12 @@ function rollupData(){
 						}
 						product = "Other";
 					}
+					else{
+						product = products[product];
+					}
 				}
 				else{
-					product = component;
+					product = products[component];
 				}
 		
 				issueCount++;
