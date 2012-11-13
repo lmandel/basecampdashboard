@@ -5,6 +5,9 @@ var products = {"Core": "Platform",
 				"Gaia::Browser": "Gaia",
 				"Gaia::Calendar": "Gaia",
 				"Gaia::E-Mail": "Gaia",
+				"Gaia::Homescreen": "Gaia",
+				"Gaia::Settings": "Gaia",
+				"Gaia::System": "Gaia",
 				"Marketplace": "Marketplace", 
 				"Other": "Other"}; 
 var otherProducts = [];
